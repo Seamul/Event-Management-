@@ -1,0 +1,35 @@
+version: "3"
+services:
+  postgres:
+    hostname: quran_postgres
+    container_name: quran_postgres
+    image: postgres:13.0
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  flyway:
+    image: flyway/flyway
+    volumes:
+      - ./db_migrations:/flyway/sql
+      - ./flyway.conf:/flyway/conf/flyway.conf
+    depends_on:
+      - postgres  # Make sure Flyway runs after the database container
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8900:8900"
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - postgres  # Make sure FastAPI runs after the database container
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres123@quran_postgres:5432/postgres
