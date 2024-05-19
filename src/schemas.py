@@ -1,12 +1,13 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import List
 
 class EventBase(BaseModel):
     city: str
     event_time_utc: datetime
     local_time: datetime
     description: str
-    attendees: int
+    attendees: int  # Change to List[str]
 
 class EventCreate(EventBase):
     pass
@@ -16,8 +17,6 @@ class EventUpdate(EventBase):
 
 class Event(EventBase):
     event_id: int
-    # created_at: datetime
-    # updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Use from_attributes for Pydantic v2 compatibility

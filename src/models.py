@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.dialects.postgresql import JSON  # Import JSON type if using PostgreSQL
 from .database import Base
 
 class Event(Base):
@@ -9,6 +10,5 @@ class Event(Base):
     event_time_utc = Column(DateTime)
     local_time = Column(DateTime)
     description = Column(String)
-    attendees = Column(Integer)
-    # created_at = Column(DateTime, default=func.now())
-    # updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    attendees = Column(Integer)  # Change to JSON type
+
