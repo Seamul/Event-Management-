@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from database import Base
+from .database import Base
 
 class Event(Base):
     __tablename__ = 'events'
@@ -10,3 +10,5 @@ class Event(Base):
     local_time = Column(DateTime)
     description = Column(String)
     attendees = Column(Integer)
+    # created_at = Column(DateTime, default=func.now())
+    # updated_at = Column(DateTime, default=func.now(), onupdate=func.now())

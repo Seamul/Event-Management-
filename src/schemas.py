@@ -1,22 +1,23 @@
 from pydantic import BaseModel
-from tortoise.contrib.pydantic import pydantic_model_creator
-from .models import *
+from datetime import datetime
 
-# User_Pydantic = pydantic_model_creator(User, name='User')
-# UserIn_Pydantic = pydantic_model_creator(User, name='UserIn', exclude_readonly=True)
+class EventBase(BaseModel):
+    city: str
+    event_time_utc: datetime
+    local_time: datetime
+    description: str
+    attendees: int
 
-DBUser_Pydantic = pydantic_model_creator(DBUser, name='DBUser')
-DBUser_Pydantic_In = pydantic_model_creator(DBUser, name='DBUserIn', exclude_readonly=True)
-DBUser_Pydantic_Out = pydantic_model_creator(DBUser, name="DBUserOut", exclude=('email'))
+class EventCreate(EventBase):
+    pass
 
-UserDevice_Pydantic = pydantic_model_creator(UserDevice, name='UserDevice')
-UserDevice_Pydantic_In = pydantic_model_creator(UserDevice, name='UserDeviceIn', exclude_readonly=True)
-UserDevice_Pydantic_Out = pydantic_model_creator(UserDevice, name="UserDeviceOut", exclude=('platform'))
+class EventUpdate(EventBase):
+    pass
 
-UserAuthInfo_Pydantic = pydantic_model_creator(UserAuthInfo, name='UserAuthInfo')
-UserAuthInfo_Pydantic_In = pydantic_model_creator(UserAuthInfo, name='UserAuthInfoIn', exclude_readonly=True)
-UserAuthInfo_Pydantic_Out = pydantic_model_creator(UserAuthInfo, name='UserAuthInfoOut', exclude=(''))
+class Event(EventBase):
+    event_id: int
+    # created_at: datetime
+    # updated_at: datetime
 
-LoginAttempt_Pydantic = pydantic_model_creator(LoginAttempt, name='LoginAttempt')
-LoginAttempt_Pydantic_In = pydantic_model_creator(LoginAttempt, name='LoginAttemptIn', exclude_readonly=True)
-LoginAttempt_Pydantic_Out = pydantic_model_creator(LoginAttempt, name='LoginAttemptOut', exclude=(''))
+    class Config:
+        orm_mode = True
