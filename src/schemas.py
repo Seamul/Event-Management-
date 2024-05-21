@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List
 
+
 class EventBase(BaseModel):
     city: str
     event_time_utc: datetime
@@ -9,14 +10,23 @@ class EventBase(BaseModel):
     description: str
     attendees: int  # Change to List[str]
 
+
 class EventCreate(EventBase):
     pass
 
+
 class EventUpdate(EventBase):
     pass
+
 
 class Event(EventBase):
     event_id: int
 
     class Config:
         from_attributes = True  # Use from_attributes for Pydantic v2 compatibility
+
+
+# Define the request model
+class TimeAdjustmentRequest(BaseModel):
+    event_id: int
+    time_adjustment_hours: int  # Number of hours to adjust (can be negative)
