@@ -114,15 +114,6 @@ async def get_event(event_id: int, db: Session = Depends(get_db)):
     return event
 
 
-# done
-@app.post("/events/add", response_model=schemas.Event)
-async def add_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
-    db_event = models.Event(**event.dict())
-    db.add(db_event)
-    db.commit()
-    db.refresh(db_event)
-    return db_event
-
 
 # done
 @app.put("/event/{event_id}", response_model=schemas.Event)
@@ -166,7 +157,7 @@ async def get_events_analysis(db: Session = Depends(get_db)):
     df = pd.DataFrame(events_data)
 
     # Convert 'event_time_utc' to datetime format for time analysis
-    df["local_time"] = pd.to_datetime(df["local_time"])
+    # df["local_time"] = pd.to_datetime(df["local_time"])
 
     # Analyzing the most popular cities by total attendees
     popular_cities = (

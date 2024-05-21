@@ -10,5 +10,5 @@ class Event(Base):
     event_time_utc = Column(DateTime)
     local_time = Column(DateTime)
     description = Column(String)
-    attendees = Column(Integer)  # Change to JSON type
+    attendees = Column(Integer)  
 
