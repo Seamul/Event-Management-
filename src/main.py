@@ -150,27 +150,6 @@ async def delete_event(event_id: int, db: Session = Depends(get_db)):
     return db_event
 
 
-# @app.get("/events/analysis", response_model=Dict[str, Any])
-# def get_events_analysis(city: str = None, date: str = None, db: Session = Depends(get_db)):
-#     query = db.query(models.Event)
-#     if city:
-#         query = query.filter(models.Event.city == city)
-
-#     events = query.all()
-
-
-#     return events
-# from pydantic import BaseModel
-# class Insight(BaseModel):
-#     popular_cities: Dict[str, int]
-#     peak_times: Dict[int, float]
-#     event_types_by_city: Dict[str, int]
-
-# class EventInsights(BaseModel):
-#     events: List[schemas.Event]
-#     insights: Insight
-
-
 @app.get("/events/analysis", response_model=Dict[str, Any])
 async def get_events_analysis(db: Session = Depends(get_db)):
     query = db.query(models.Event)
@@ -228,11 +207,15 @@ async def update_event_time(
     for request in requests:
         # Fetch the event by ID
         event = (
-            db.query(models.Event).filter(models.Event.event_id == request.event_id).first()
+            db.query(models.Event)
+            .filter(models.Event.event_id == request.event_id)
+            .first()
         )
 
         if not event:
-            raise HTTPException(status_code=404, detail=f"Event with ID {request.event_id} not found")
+            raise HTTPException(
+                status_code=404, detail=f"Event with ID {request.event_id} not found"
+            )
 
         # Adjust the event time
         new_event_time = event.local_time + timedelta(
@@ -243,10 +226,12 @@ async def update_event_time(
         event.local_time = new_event_time
         db.commit()
 
-        response.append({
-            "event_id": request.event_id,
-            "new_local_time": new_event_time,
-            "message": "Event time updated successfully"
-        })
+        response.append(
+            {
+                "event_id": request.event_id,
+                "new_local_time": new_event_time,
+                "message": "Event time updated successfully",
+            }
+        )
 
     return response
